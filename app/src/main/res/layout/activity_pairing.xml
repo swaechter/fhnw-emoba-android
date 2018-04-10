@@ -6,7 +6,7 @@
     tools:context=".PairingActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -17,7 +17,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -25,13 +25,32 @@
         android:layout_marginTop="50dp"
         android:text="Welcome to Sphero Control. Please use the connect button to connect to the Sphero." />
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:text="Please ensure that the app has granted bluetooth permissions and bluetooth is enabled - otherwise you will receive an error message." />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="170dp"
+        android:autoLink="web"
+        android:text="You can check out the source code if this project on GitHub: https://github.com/swaechter/fhnw-emoba" />
+
     <Button
         android:id="@+id/connectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="230dp"
         android:onClick="onConnectButtonClicked"
         android:text="Connect" />
 </RelativeLayout>
