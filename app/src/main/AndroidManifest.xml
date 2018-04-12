@@ -23,7 +23,7 @@
         </activity>
         <activity
             android:name=".DriveActivity"
-            android:label="@string/title_activity_drive"></activity>
+            android:label="@string/title_activity_drive" />
     </application>
 
 </manifest>
