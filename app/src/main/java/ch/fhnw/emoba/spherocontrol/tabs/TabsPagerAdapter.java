@@ -5,38 +5,37 @@ import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import ch.fhnw.emoba.spherocontrol.fragments.AimFragment;
-import ch.fhnw.emoba.spherocontrol.fragments.SensorFragment;
-import ch.fhnw.emoba.spherocontrol.fragments.TouchFragment;
+import java.util.List;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-    private final Map<String, Fragment> fragments;
+    private final List<Fragment> fragmentObjects;
 
-    public TabsPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
+    private final List<String> fragmentTitles;
 
-        this.fragments = new LinkedHashMap<>();
-        this.fragments.put("Aim", new AimFragment());
-        this.fragments.put("Touch", new TouchFragment());
-        this.fragments.put("Sensor", new SensorFragment());
+    public TabsPagerAdapter(FragmentManager manager) {
+        super(manager);
+        this.fragmentObjects = new ArrayList<>();
+        this.fragmentTitles = new ArrayList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new ArrayList<>(fragments.values()).get(position);
+        return fragmentObjects.get(position);
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return fragmentObjects.size();
+    }
+
+    public void addFragment(Fragment fragment, String title) {
+        fragmentObjects.add(fragment);
+        fragmentTitles.add(title);
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return new ArrayList<>(fragments.keySet()).get(position);
+        return fragmentTitles.get(position);
     }
 }
