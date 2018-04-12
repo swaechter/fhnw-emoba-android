@@ -1,74 +1,27 @@
 package ch.fhnw.emoba.spherocontrol;
 
-
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import ch.fhnw.emoba.spherocontrol.adapter.SectionsPagerAdapter;
+import ch.fhnw.emoba.spherocontrol.tabs.TabListener;
+import ch.fhnw.emoba.spherocontrol.tabs.TabsPagerAdapter;
 
-public class DriveActivity extends Activity implements ActionBar.TabListener {
-
-    private ViewPager mViewPager;
+public class DriveActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drive);
 
-        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getFragmentManager());
 
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        ViewPager viewPager = findViewById(R.id.viewpager);
+        viewPager.setAdapter(tabsPagerAdapter);
 
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
-            }
-        });
-
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_drive, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // No-op
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // No-op
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+        tabLayout.addOnTabSelectedListener(new TabListener(tabsPagerAdapter));
+        tabLayout.setupWithViewPager(viewPager);
     }
 }

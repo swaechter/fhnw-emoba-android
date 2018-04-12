@@ -7,11 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import ch.fhnw.emoba.spherocontrol.R;
+import ch.fhnw.emoba.spherocontrol.tabs.TabbedFragment;
 
-public class TouchFragment extends Fragment {
+public class TouchFragment extends Fragment implements TabbedFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_touch, container, false);
+    }
+
+    @Override
+    public void onFragmentTabGainedFocus() {
+    }
+
+    @Override
+    public void onFragmentTabLostFocus() {
     }
 }

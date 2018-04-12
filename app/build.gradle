@@ -19,8 +19,10 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:support-v4:27.1.0'
-    implementation 'com.android.support:support-v13:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-v13:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     compile project(':spherolib-release')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'libs', include: ['*.jar'])
