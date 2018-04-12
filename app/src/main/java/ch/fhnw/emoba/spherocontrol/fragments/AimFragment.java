@@ -22,7 +22,7 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
             @Override
             public void onClick(View v) {
-                SpheroModel.turnRobot(true);
+                SpheroModel.turnLeft();
             }
         });
 
@@ -31,7 +31,7 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
             @Override
             public void onClick(View v) {
-                SpheroModel.turnRobot(false);
+                SpheroModel.turnRight();
             }
         });
 
@@ -40,12 +40,12 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
     @Override
     public void onFragmentTabGainedFocus() {
-        SpheroModel.enableDiscoveryLight(true);
+        SpheroModel.setDiscoveryLight(true);
     }
 
     @Override
     public void onFragmentTabLostFocus() {
-        SpheroModel.enableDiscoveryLight(false);
-        SpheroModel.setZeroHeadingRobot();
+        SpheroModel.setDiscoveryLight(false);
+        SpheroModel.setZeroHeading();
     }
 }
