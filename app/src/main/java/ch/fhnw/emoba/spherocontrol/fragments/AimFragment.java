@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import ch.fhnw.emoba.spherocontrol.DriveActivity;
 import ch.fhnw.emoba.spherocontrol.R;
 import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 import ch.fhnw.emoba.spherocontrol.tabs.TabbedFragment;
@@ -22,7 +23,7 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
             @Override
             public void onClick(View v) {
-                SpheroModel.turnLeft();
+                SpheroModel.turnLeft(DriveActivity.spheroWorkerThread);
             }
         });
 
@@ -31,7 +32,7 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
             @Override
             public void onClick(View v) {
-                SpheroModel.turnRight();
+                SpheroModel.turnRight(DriveActivity.spheroWorkerThread);
             }
         });
 
@@ -40,12 +41,12 @@ public class AimFragment extends Fragment implements TabbedFragment {
 
     @Override
     public void onFragmentTabGainedFocus() {
-        SpheroModel.setDiscoveryLight(true);
+        SpheroModel.setDiscoveryLight(DriveActivity.spheroWorkerThread, true);
     }
 
     @Override
     public void onFragmentTabLostFocus() {
-        SpheroModel.setDiscoveryLight(false);
-        SpheroModel.setZeroHeading();
+        SpheroModel.setDiscoveryLight(DriveActivity.spheroWorkerThread, false);
+        SpheroModel.setZeroHeading(DriveActivity.spheroWorkerThread);
     }
 }
