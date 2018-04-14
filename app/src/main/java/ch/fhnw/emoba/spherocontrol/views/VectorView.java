@@ -83,11 +83,12 @@ public class VectorView extends View {
             if (velocity > 1) {
                 x = (float) Math.cos(Math.toRadians(angle));
                 y = (float) Math.sin(Math.toRadians(angle));
+                velocity = 1;
             }
 
             touchPoint.x = (int) event.getX();
             touchPoint.y = (int) event.getY();
-            vectorViewListener.onMove(x, y, angle);
+            vectorViewListener.onMove(x, y, angle, velocity);
             Log.d("sphero", "x: " + x + " " + y);
         } else {
             touchPoint.x = 0;

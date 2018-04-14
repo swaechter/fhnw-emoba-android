@@ -1,7 +1,6 @@
 package ch.fhnw.emoba.spherocontrol;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
@@ -9,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,7 +16,7 @@ import ch.fhnw.edu.emoba.spherolib.SpheroRobotDiscoveryListener;
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
 
-public class PairingActivity extends Activity implements SpheroRobotDiscoveryListener {
+public class PairingActivity extends FragmentActivity implements SpheroRobotDiscoveryListener {
 
     public static final boolean DEBUG = Build.PRODUCT.startsWith("sdk");
 
@@ -56,7 +56,6 @@ public class PairingActivity extends Activity implements SpheroRobotDiscoveryLis
                 setConnectButtonText("Connect");
                 Intent intent = new Intent(this, DriveActivity.class);
                 startActivity(intent);
-
                 break;
             }
             case Offline: {

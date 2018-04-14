@@ -1,7 +1,7 @@
 package ch.fhnw.emoba.spherocontrol.tabs;
 
-import android.app.Fragment;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 
 public class TabListener implements TabLayout.OnTabSelectedListener {
 
@@ -31,6 +31,6 @@ public class TabListener implements TabLayout.OnTabSelectedListener {
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        // No operation
+        // Do nothing
     }
 }

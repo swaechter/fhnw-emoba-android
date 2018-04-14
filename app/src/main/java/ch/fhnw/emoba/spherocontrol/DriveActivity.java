@@ -1,12 +1,9 @@
 package ch.fhnw.emoba.spherocontrol;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.HandlerThread;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.Button;
 
 import ch.fhnw.emoba.spherocontrol.fragments.AimFragment;
 import ch.fhnw.emoba.spherocontrol.fragments.SensorFragment;
@@ -15,7 +12,7 @@ import ch.fhnw.emoba.spherocontrol.models.SpheroWorkerThread;
 import ch.fhnw.emoba.spherocontrol.tabs.TabListener;
 import ch.fhnw.emoba.spherocontrol.tabs.TabsPagerAdapter;
 
-public class DriveActivity extends Activity {
+public class DriveActivity extends FragmentActivity {
 
     public static SpheroWorkerThread spheroWorkerThread;
 
@@ -27,7 +24,7 @@ public class DriveActivity extends Activity {
         spheroWorkerThread = new SpheroWorkerThread("sphero");
         spheroWorkerThread.start();
 
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getFragmentManager());
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getSupportFragmentManager());
         tabsPagerAdapter.addFragment(new AimFragment(), "Aim");
         tabsPagerAdapter.addFragment(new TouchFragment(), "Touch");
         tabsPagerAdapter.addFragment(new SensorFragment(), "Sensor");

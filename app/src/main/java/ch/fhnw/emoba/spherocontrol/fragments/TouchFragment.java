@@ -1,7 +1,7 @@
 package ch.fhnw.emoba.spherocontrol.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +21,17 @@ public class TouchFragment extends Fragment implements TabbedFragment, VectorVie
 
     @Override
     public void onFragmentTabGainedFocus() {
-        // No operation
+        // Do nothing
     }
 
     @Override
     public void onFragmentTabLostFocus() {
-        // No operation
+        // Do nothing
     }
 
     @Override
-    public void onMove(float x, float y, float angle) {
-        SpheroModel.startDriving(DriveActivity.spheroWorkerThread, x, y);
+    public void onMove(float x, float y, float angle, float velocity) {
+        SpheroModel.startDriving(DriveActivity.spheroWorkerThread, angle, velocity);
     }
 
     @Override

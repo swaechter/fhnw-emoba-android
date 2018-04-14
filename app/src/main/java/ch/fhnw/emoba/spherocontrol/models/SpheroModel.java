@@ -7,7 +7,7 @@ import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
 
 public class SpheroModel {
 
-    private static final long DRIVE_BLOCKING_TIME = 200;
+    private static final long DRIVE_BLOCKING_TIME = 500;
 
     private static long drivingTimestamp = System.currentTimeMillis();
 
@@ -54,7 +54,7 @@ public class SpheroModel {
         });
     }
 
-    public static void startDriving(SpheroWorkerThread spheroWorkerThread, final double x, final double y) {
+    public static void startDriving(SpheroWorkerThread spheroWorkerThread, final float angle, final float velocity) {
         spheroWorkerThread.postTask(new Runnable() {
 
             @Override
@@ -62,8 +62,6 @@ public class SpheroModel {
                 long currentTimestamp = System.currentTimeMillis();
                 if (drivingTimestamp + DRIVE_BLOCKING_TIME < currentTimestamp) {
                     drivingTimestamp = currentTimestamp;
-                    float angle = SpheroMath.calculateAngle(x, y);
-                    float velocity = SpheroMath.calculateVelocity(x, y);
                     if (!SpheroMath.isAroundValue(robotAngle, angle, 30) || !SpheroMath.isAroundValue(robotVelocity, velocity, 0.3f)) {
                         Log.d("sphero", "Accepted at " + currentTimestamp);
                         robotAngle = angle;

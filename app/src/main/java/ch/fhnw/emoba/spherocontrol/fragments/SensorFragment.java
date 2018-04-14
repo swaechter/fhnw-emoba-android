@@ -1,24 +1,27 @@
 package ch.fhnw.emoba.spherocontrol.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
-import ch.fhnw.emoba.spherocontrol.R;
+import ch.fhnw.emoba.spherocontrol.DriveActivity;
+import ch.fhnw.emoba.spherocontrol.models.SpheroMath;
+import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 import ch.fhnw.emoba.spherocontrol.tabs.TabbedFragment;
+import ch.fhnw.emoba.spherocontrol.views.VectorView;
+import ch.fhnw.emoba.spherocontrol.views.VectorViewListener;
 
-public class SensorFragment extends Fragment implements TabbedFragment, SensorEventListener {
+public class SensorFragment extends Fragment implements TabbedFragment, VectorViewListener, SensorEventListener {
+
+    private static final double MIN_ANGLE = 2;
 
     private SensorManager sensorManager;
 
@@ -26,6 +29,12 @@ public class SensorFragment extends Fragment implements TabbedFragment, SensorEv
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return new VectorView(getActivity(), this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager == null) {
             throw new RuntimeException("Unable to get the system sensor manager");
@@ -35,8 +44,6 @@ public class SensorFragment extends Fragment implements TabbedFragment, SensorEv
         if (sensor == null) {
             throw new RuntimeException("Unable to initialize the rotation sensor");
         }
-
-        return inflater.inflate(R.layout.fragment_sensor, container, false);
     }
 
     @Override
@@ -47,6 +54,16 @@ public class SensorFragment extends Fragment implements TabbedFragment, SensorEv
     @Override
     public void onFragmentTabLostFocus() {
         sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onMove(float x, float y, float angle, float velocity) {
+        // Do nothing
+    }
+
+    @Override
+    public void onRelease() {
+        // Do nothing
     }
 
     @Override
