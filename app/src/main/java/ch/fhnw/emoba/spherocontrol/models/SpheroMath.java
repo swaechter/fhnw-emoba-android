@@ -13,6 +13,9 @@ public class SpheroMath {
     }
 
     public static float calculateAngle(double x, double y) {
+        double temp = y;
+        y = x;
+        x = temp;
         double degrees = Math.atan2(y, x) * (180 / Math.PI);
         return (float) (degrees + 360) % 360;
     }
