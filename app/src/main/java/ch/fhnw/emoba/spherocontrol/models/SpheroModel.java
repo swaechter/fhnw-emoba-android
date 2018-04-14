@@ -42,24 +42,12 @@ public class SpheroModel {
         });
     }
 
-    public static void turnLeft(SpheroWorkerThread spheroWorkerThread) {
+    public static void turn(SpheroWorkerThread spheroWorkerThread, final float angle) {
         spheroWorkerThread.postTask(new Runnable() {
 
             @Override
             public void run() {
-                robotAngle = (robotAngle + 30 < 360) ? robotAngle + 30 : 0;
-                SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
-                spheroRobotProxy.drive(robotAngle, 0);
-            }
-        });
-    }
-
-    public static void turnRight(SpheroWorkerThread spheroWorkerThread) {
-        spheroWorkerThread.postTask(new Runnable() {
-
-            @Override
-            public void run() {
-                robotAngle = (robotAngle - 30 > 30) ? robotAngle - 30 : 360;
+                robotAngle = angle;
                 SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                 spheroRobotProxy.drive(robotAngle, 0);
             }
@@ -74,9 +62,9 @@ public class SpheroModel {
                 long currentTimestamp = System.currentTimeMillis();
                 if (drivingTimestamp + DRIVE_BLOCKING_TIME < currentTimestamp) {
                     drivingTimestamp = currentTimestamp;
-                    float angle = calculateAngle(x, y);
-                    float velocity = calculateVelocity(x, y);
-                    if (!isAroundValue(robotAngle, angle, 10) || !isAroundValue(robotVelocity, velocity, 0.1f)) {
+                    float angle = SpheroMath.calculateAngle(x, y);
+                    float velocity = SpheroMath.calculateVelocity(x, y);
+                    if (!SpheroMath.isAroundValue(robotAngle, angle, 10) || !SpheroMath.isAroundValue(robotVelocity, velocity, 0.1f)) {
                         Log.d("sphero", "Accepted at " + currentTimestamp);
                         robotAngle = angle;
                         robotVelocity = velocity;
@@ -104,20 +92,6 @@ public class SpheroModel {
                 }
             }
         });
-    }
-
-    private static float calculateAngle(double x, double y) {
-        double degrees = Math.atan2(y, x) * (180 / Math.PI);
-        return (float) (degrees + 360) % 360;
-    }
-
-    private static float calculateVelocity(double x, double y) {
-        double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        return (distance <= 1) ? (float) distance : 1;
-    }
-
-    private static boolean isAroundValue(float expectedValue, float givenValue, float diffence) {
-        return expectedValue - diffence < givenValue && expectedValue + diffence > givenValue;
     }
 
     private static void sleep(int milliSeconds) {
