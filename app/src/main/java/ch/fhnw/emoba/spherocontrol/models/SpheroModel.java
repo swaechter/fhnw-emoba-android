@@ -64,7 +64,7 @@ public class SpheroModel {
                     drivingTimestamp = currentTimestamp;
                     float angle = SpheroMath.calculateAngle(x, y);
                     float velocity = SpheroMath.calculateVelocity(x, y);
-                    if (!SpheroMath.isAroundValue(robotAngle, angle, 10) || !SpheroMath.isAroundValue(robotVelocity, velocity, 0.1f)) {
+                    if (!SpheroMath.isAroundValue(robotAngle, angle, 30) || !SpheroMath.isAroundValue(robotVelocity, velocity, 0.3f)) {
                         Log.d("sphero", "Accepted at " + currentTimestamp);
                         robotAngle = angle;
                         robotVelocity = velocity;
