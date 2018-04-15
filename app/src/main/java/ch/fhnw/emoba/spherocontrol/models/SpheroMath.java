@@ -7,9 +7,14 @@ public class SpheroMath {
         return (float) (degrees + 360) % 360;
     }
 
-    public static float calculateAngle(double x, double y) {
+    public static float calculateTouchAngle(double x, double y) {
         double degrees = Math.atan2(y, x) * (180 / Math.PI);
         return (float) (degrees + 360) % 360;
+    }
+
+    public static float calculateSensorAngle(double x, double y) {
+        double rad = Math.atan2(x, y);
+        return (float) (rad * (180 / Math.PI) + 180);
     }
 
     public static float calculateVelocity(double x, double y) {

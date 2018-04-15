@@ -7,7 +7,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,8 @@ import ch.fhnw.emoba.spherocontrol.views.VectorViewListener;
 public class SensorFragment extends Fragment implements TabbedFragment, VectorViewListener, SensorEventListener {
 
     private static final double MIN_ANGLE = 2;
+
+    private static final double THROTTLE_RATIO = 0.2;
 
     private SensorManager sensorManager;
 
@@ -54,6 +55,7 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
     @Override
     public void onFragmentTabLostFocus() {
         sensorManager.unregisterListener(this);
+        SpheroModel.stopDriving(DriveActivity.spheroWorkerThread);
     }
 
     @Override
@@ -68,21 +70,22 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        double deltaX = event.values[0];
-        double deltaY = event.values[1];
-        double angleSum = Math.abs(deltaX) + Math.abs(deltaY);
+        double x = event.values[0];
+        double y = event.values[1];
 
-        double rad = Math.atan2(deltaX, deltaY);
-        double heading = rad * (180 / Math.PI) + 180;
-        double angleSum2 = Math.abs(deltaX) + Math.abs(deltaY);
-        double speed = Math.max(0, (angleSum2 - MIN_ANGLE) / 6d);
+        float angle = SpheroMath.calculateSensorAngle(x, y);
+        float velocity = (float) Math.max(0, (angle - MIN_ANGLE) / 6d);
+        if (velocity > 1.0) {
 
-        float angle = SpheroMath.calculateAngle(deltaX, deltaY);
-        float velocity = SpheroMath.calculateVelocity(deltaX, deltaY);
+            velocity = 1.0f;
+        }
 
-        if (angleSum > MIN_ANGLE) {
-            SpheroModel.startDriving(DriveActivity.spheroWorkerThread, (float) heading, 0.3f);
-            Log.d("sphero", "=====> Heading: " + angle + " Heading: " + heading + " Speed: " + velocity);
+        velocity *= THROTTLE_RATIO;
+
+        double sum = Math.abs(x) + Math.abs(y);
+
+        if (sum > MIN_ANGLE) {
+            SpheroModel.startDriving(DriveActivity.spheroWorkerThread, angle, velocity);
         } else {
             SpheroModel.stopDriving(DriveActivity.spheroWorkerThread);
         }
