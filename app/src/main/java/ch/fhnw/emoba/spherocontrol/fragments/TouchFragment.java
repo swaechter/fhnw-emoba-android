@@ -16,7 +16,7 @@ public class TouchFragment extends Fragment implements TabbedFragment, VectorVie
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new VectorView(getContext(), this);
+        return new VectorView(getContext(), this, VectorView.DrawStrategy.TOUCH);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class TouchFragment extends Fragment implements TabbedFragment, VectorVie
     }
 
     @Override
-    public void onMove(float x, float y, float angle, float velocity) {
+    public void onMove(float angle, float velocity) {
         SpheroModel.startDriving(DriveActivity.spheroWorkerThread, angle, velocity);
     }
 

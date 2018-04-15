@@ -16,7 +16,7 @@ public class AimFragment extends Fragment implements TabbedFragment, VectorViewL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new VectorView(getContext(), this);
+        return new VectorView(getContext(), this, VectorView.DrawStrategy.AIM);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class AimFragment extends Fragment implements TabbedFragment, VectorViewL
     }
 
     @Override
-    public void onMove(float x, float y, float angle, float velocity) {
+    public void onMove(float angle, float velocity) {
         SpheroModel.turn(DriveActivity.spheroWorkerThread, angle);
     }
 

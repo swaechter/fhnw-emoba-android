@@ -25,7 +25,7 @@ TODO
 ### Disconnect from Device
 
 TODO
-
+
 ## Known Erratas
 
 * The disconnect functionality does not work in the emulator because the Sphero mock doesn't call the listener after a disconnect.

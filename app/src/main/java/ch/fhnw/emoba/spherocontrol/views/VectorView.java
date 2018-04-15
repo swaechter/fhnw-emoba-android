@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,7 +12,15 @@ import ch.fhnw.emoba.spherocontrol.models.SpheroMath;
 
 public class VectorView extends View {
 
+    public enum DrawStrategy {
+        AIM,
+        TOUCH,
+        SENSOR
+    }
+
     private final VectorViewListener vectorViewListener;
+
+    private final DrawStrategy drawStrategy;
 
     private final Paint outerZonePaint;
 
@@ -25,16 +32,15 @@ public class VectorView extends View {
 
     private final Point touchPoint;
 
-    private int canvasHeight;
-
-    private int canvasWidth;
+    private final Point fixedPoint;
 
     private int canvasRadius;
 
-    public VectorView(Context context, VectorViewListener vectorViewListener) {
+    public VectorView(Context context, VectorViewListener vectorViewListener, DrawStrategy drawStrategy) {
         super(context);
 
         this.vectorViewListener = vectorViewListener;
+        this.drawStrategy = drawStrategy;
 
         outerZonePaint = new Paint();
         outerZonePaint.setColor(Color.DKGRAY);
@@ -49,12 +55,15 @@ public class VectorView extends View {
         centerPoint = new Point();
 
         touchPoint = new Point();
+
+        fixedPoint = new Point();
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvasWidth = canvas.getWidth();
-        canvasHeight = canvas.getHeight();
+        int canvasWidth = canvas.getWidth();
+        int canvasHeight = canvas.getHeight();
+
         canvasRadius = (int) (((canvasHeight > canvasWidth) ? canvasWidth : canvasHeight) * 0.9) / 2;
 
         centerPoint.x = canvasWidth / 2;
@@ -65,8 +74,14 @@ public class VectorView extends View {
         canvas.drawCircle(centerPoint.x, centerPoint.y, canvasRadius, innerZonePaint);
         canvas.drawCircle(centerPoint.x, centerPoint.y, canvasRadius * 0.1f, outerZonePaint);
         if (touchPoint.x != 0 && touchPoint.y != 0) {
-            canvas.drawLine(centerPoint.x, centerPoint.y, touchPoint.x, touchPoint.y, linePaint);
-            canvas.drawCircle(touchPoint.x, touchPoint.y, canvasRadius * 0.02f, linePaint);
+            if (drawStrategy == DrawStrategy.AIM) {
+                canvas.drawCircle(fixedPoint.x, fixedPoint.y, canvasRadius * 0.1f, linePaint);
+            } else if (drawStrategy == DrawStrategy.TOUCH) {
+                canvas.drawLine(centerPoint.x, centerPoint.y, touchPoint.x, touchPoint.y, linePaint);
+                canvas.drawCircle(touchPoint.x, touchPoint.y, canvasRadius * 0.1f, linePaint);
+            } else {
+
+            }
         }
         canvas.drawCircle(centerPoint.x, centerPoint.y, canvasRadius * 0.02f, linePaint);
     }
@@ -74,25 +89,46 @@ public class VectorView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-            float x = (event.getX() - centerPoint.x) / canvasRadius;
-            float y = ((event.getY() - centerPoint.y) * -1) / canvasRadius;
+            float initialX = event.getX();
+            float initialY = event.getY();
 
-            // Check if the value is within/on the unit circle: http://www.mathe-online.at/lernpfade/einheitskreis/?kapitel=2
-            float velocity = SpheroMath.calculateVelocity(x, y);
-            float angle = SpheroMath.calculateAngle(x, y);
-            if (velocity > 1) {
-                x = (float) Math.cos(Math.toRadians(angle));
-                y = (float) Math.sin(Math.toRadians(angle));
-                velocity = 1;
+            float fixedX = initialX;
+            float fixedY = initialY;
+
+            float relativeX = initialX - centerPoint.x;
+            float relativeY = (initialY - centerPoint.y) * -1;
+
+            float circleX = relativeX / canvasRadius;
+            float circleY = relativeY / canvasRadius;
+
+            float circleVelocity = SpheroMath.calculateVelocity(circleX, circleY);
+            float circleAngle = SpheroMath.calculateAngle(circleX, circleY);
+
+            float spheroAngle = SpheroMath.calculateSpheroAngle(circleX, circleY);
+
+            if (circleVelocity > 1.0) {
+                circleX = (float) Math.cos(Math.toRadians(circleAngle));
+                circleY = (float) Math.sin(Math.toRadians(circleAngle));
+                circleVelocity = 1.0f;
+
+                relativeX = circleX * canvasRadius;
+                relativeY = circleY * canvasRadius;
+
+                fixedX = relativeX + centerPoint.x;
+                fixedY = (relativeY * -1) + centerPoint.y;
             }
 
-            touchPoint.x = (int) event.getX();
-            touchPoint.y = (int) event.getY();
-            vectorViewListener.onMove(x, y, angle, velocity);
-            Log.d("sphero", "x: " + x + " " + y);
+            touchPoint.x = (int) initialX;
+            touchPoint.y = (int) initialY;
+            fixedPoint.x = (int) fixedX;
+            fixedPoint.y = (int) fixedY;
+
+            vectorViewListener.onMove(spheroAngle, circleVelocity);
         } else {
             touchPoint.x = 0;
             touchPoint.y = 0;
+            fixedPoint.x = 0;
+            fixedPoint.y = 0;
             vectorViewListener.onRelease();
         }
 

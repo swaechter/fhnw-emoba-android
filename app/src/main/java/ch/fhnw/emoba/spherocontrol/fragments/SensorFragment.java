@@ -29,7 +29,7 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return new VectorView(getActivity(), this);
+        return new VectorView(getActivity(), this, VectorView.DrawStrategy.SENSOR);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
     }
 
     @Override
-    public void onMove(float x, float y, float angle, float velocity) {
+    public void onMove(float angle, float velocity) {
         // Do nothing
     }
 

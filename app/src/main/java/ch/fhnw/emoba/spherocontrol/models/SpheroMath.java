@@ -2,8 +2,13 @@ package ch.fhnw.emoba.spherocontrol.models;
 
 public class SpheroMath {
 
-    public static float calculateAngle(double x, double y) {
+    public static float calculateSpheroAngle(double x, double y) {
         double degrees = Math.atan2(x, y) * (180 / Math.PI);
+        return (float) (degrees + 360) % 360;
+    }
+
+    public static float calculateAngle(double x, double y) {
+        double degrees = Math.atan2(y, x) * (180 / Math.PI);
         return (float) (degrees + 360) % 360;
     }
 
