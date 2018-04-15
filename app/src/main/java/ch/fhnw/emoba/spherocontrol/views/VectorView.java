@@ -92,9 +92,6 @@ public class VectorView extends View {
             float initialX = event.getX();
             float initialY = event.getY();
 
-            float fixedX = initialX;
-            float fixedY = initialY;
-
             float relativeX = initialX - centerPoint.x;
             float relativeY = (initialY - centerPoint.y) * -1;
 
@@ -116,8 +113,8 @@ public class VectorView extends View {
             relativeX = circleX * canvasRadius;
             relativeY = circleY * canvasRadius;
 
-            fixedX = relativeX + centerPoint.x;
-            fixedY = (relativeY * -1) + centerPoint.y;
+            float fixedX = relativeX + centerPoint.x;
+            float fixedY = (relativeY * -1) + centerPoint.y;
 
             touchPoint.x = (int) initialX;
             touchPoint.y = (int) initialY;
