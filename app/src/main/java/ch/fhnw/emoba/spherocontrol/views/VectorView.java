@@ -107,16 +107,17 @@ public class VectorView extends View {
             float spheroAngle = SpheroMath.calculateSpheroAngle(circleX, circleY);
 
             if (circleVelocity > 1.0) {
-                circleX = (float) Math.cos(Math.toRadians(circleAngle));
-                circleY = (float) Math.sin(Math.toRadians(circleAngle));
                 circleVelocity = 1.0f;
-
-                relativeX = circleX * canvasRadius;
-                relativeY = circleY * canvasRadius;
-
-                fixedX = relativeX + centerPoint.x;
-                fixedY = (relativeY * -1) + centerPoint.y;
             }
+
+            circleX = (float) Math.cos(Math.toRadians(circleAngle));
+            circleY = (float) Math.sin(Math.toRadians(circleAngle));
+
+            relativeX = circleX * canvasRadius;
+            relativeY = circleY * canvasRadius;
+
+            fixedX = relativeX + centerPoint.x;
+            fixedY = (relativeY * -1) + centerPoint.y;
 
             touchPoint.x = (int) initialX;
             touchPoint.y = (int) initialY;
