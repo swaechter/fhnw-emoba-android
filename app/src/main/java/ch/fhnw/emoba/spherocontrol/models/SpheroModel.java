@@ -1,7 +1,9 @@
 package ch.fhnw.emoba.spherocontrol.models;
 
+import android.content.Context;
 import android.util.Log;
 
+import ch.fhnw.edu.emoba.spherolib.SpheroRobotDiscoveryListener;
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
 
@@ -11,9 +13,40 @@ public class SpheroModel {
 
     private static long drivingTimestamp = System.currentTimeMillis();
 
+    private static SpheroRobotProxy spheroRobotProxy;
+
     private static float robotAngle;
 
     private static float robotVelocity;
+
+    public static boolean isDiscovering() {
+        return spheroRobotProxy.isDiscovering();
+    }
+
+    public static void startDiscovering(Context context) {
+        stopDiscovering();
+        spheroRobotProxy.startDiscovering(context);
+    }
+
+    public static void stopDiscovering() {
+        if (spheroRobotProxy.isDiscovering()) {
+            spheroRobotProxy.stopDiscovering();
+        }
+    }
+
+    public static void createSphero(boolean onEmulator) {
+        if (spheroRobotProxy == null) {
+            spheroRobotProxy = SpheroRobotFactory.createRobot(onEmulator);
+        }
+    }
+
+    public static void disconnectFromSphero() {
+            spheroRobotProxy.disconnect();
+    }
+
+    public static void setSpheroListener(SpheroRobotDiscoveryListener spheroRobotDiscoveryListener) {
+        spheroRobotProxy.setDiscoveryListener(spheroRobotDiscoveryListener);
+    }
 
     public static void setDiscoveryLight(SpheroWorkerThread spheroWorkerThread, final boolean discoverStatus) {
         spheroWorkerThread.postTask(new Runnable() {
@@ -23,7 +56,6 @@ public class SpheroModel {
                 float ledRange = discoverStatus ? 0.0f : 0.5f;
                 float backLedBrightness = discoverStatus ? 1.0f : 0.0f;
 
-                SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                 spheroRobotProxy.setLed(ledRange, ledRange, ledRange);
                 sleep(100); // Wait some time so the LED light can change its status
                 spheroRobotProxy.setBackLedBrightness(backLedBrightness);
@@ -36,7 +68,6 @@ public class SpheroModel {
 
             @Override
             public void run() {
-                SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                 spheroRobotProxy.setZeroHeading();
             }
         });
@@ -48,7 +79,6 @@ public class SpheroModel {
             @Override
             public void run() {
                 robotAngle = angle;
-                SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                 spheroRobotProxy.drive(robotAngle, 0);
             }
         });
@@ -66,7 +96,6 @@ public class SpheroModel {
                         Log.d("sphero", "Accepted at " + currentTimestamp);
                         robotAngle = angle;
                         robotVelocity = velocity;
-                        SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                         spheroRobotProxy.drive(angle, velocity);
                     } else {
                         Log.d("sphero", "Similar value at " + currentTimestamp);
@@ -85,7 +114,6 @@ public class SpheroModel {
             public void run() {
                 if (robotVelocity != 0) {
                     robotVelocity = 0;
-                    SpheroRobotProxy spheroRobotProxy = SpheroRobotFactory.getActualRobotProxy();
                     spheroRobotProxy.drive(robotAngle, robotVelocity);
                 }
             }

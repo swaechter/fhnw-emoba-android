@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ch.fhnw.emoba.spherocontrol.DriveActivity;
+import ch.fhnw.emoba.spherocontrol.activities.DriveActivity;
 import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 import ch.fhnw.emoba.spherocontrol.tabs.TabbedFragment;
 import ch.fhnw.emoba.spherocontrol.views.VectorView;

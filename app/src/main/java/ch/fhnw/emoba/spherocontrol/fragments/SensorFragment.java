@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ch.fhnw.emoba.spherocontrol.DriveActivity;
+import ch.fhnw.emoba.spherocontrol.activities.DriveActivity;
 import ch.fhnw.emoba.spherocontrol.models.SpheroMath;
 import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 import ch.fhnw.emoba.spherocontrol.tabs.TabbedFragment;
@@ -68,7 +68,24 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // TODO: Implement funny stuff in 42 dimensions
+        double deltaX = event.values[0];
+        double deltaY = event.values[1];
+        double angleSum = Math.abs(deltaX) + Math.abs(deltaY);
+
+        double rad = Math.atan2(deltaX, deltaY);
+        double heading = rad * (180 / Math.PI) + 180;
+        double angleSum2 = Math.abs(deltaX) + Math.abs(deltaY);
+        double speed = Math.max(0, (angleSum2 - MIN_ANGLE) / 6d);
+
+        float angle = SpheroMath.calculateAngle(deltaX, deltaY);
+        float velocity = SpheroMath.calculateVelocity(deltaX, deltaY);
+
+        if (angleSum > MIN_ANGLE) {
+            SpheroModel.startDriving(DriveActivity.spheroWorkerThread, (float) heading, 0.3f);
+            Log.d("sphero", "=====> Heading: " + angle + " Heading: " + heading + " Speed: " + velocity);
+        } else {
+            SpheroModel.stopDriving(DriveActivity.spheroWorkerThread);
+        }
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ch.fhnw.emoba.spherocontrol;
+package ch.fhnw.emoba.spherocontrol.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,22 +13,20 @@ import android.view.View;
 import android.widget.Button;
 
 import ch.fhnw.edu.emoba.spherolib.SpheroRobotDiscoveryListener;
-import ch.fhnw.edu.emoba.spherolib.SpheroRobotFactory;
-import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
+import ch.fhnw.emoba.spherocontrol.R;
+import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 
 public class PairingActivity extends FragmentActivity implements SpheroRobotDiscoveryListener {
 
     public static final boolean DEBUG = Build.PRODUCT.startsWith("sdk");
-
-    private SpheroRobotProxy spheroRobotProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pairing);
 
-        spheroRobotProxy = SpheroRobotFactory.createRobot(DEBUG);
-        spheroRobotProxy.setDiscoveryListener(this);
+        SpheroModel.createSphero(DEBUG);
+        SpheroModel.setSpheroListener(this);
     }
 
     public void onConnectButtonClicked(View view) {
@@ -38,11 +36,11 @@ public class PairingActivity extends FragmentActivity implements SpheroRobotDisc
         } else if ((bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) && !DEBUG) {
             showErrorAlert("Alert", "The device has no bluetooth adapter or bluetooth isn't enabled. Please enable bluetooth!");
         } else {
-            if (!spheroRobotProxy.isDiscovering()) {
-                spheroRobotProxy.startDiscovering(getApplicationContext());
+            if(!SpheroModel.isDiscovering()) {
+                SpheroModel.startDiscovering(getApplicationContext());
                 setConnectButtonText("Connecting...");
             } else {
-                spheroRobotProxy.stopDiscovering();
+                SpheroModel.stopDiscovering();
                 setConnectButtonText("Connect");
             }
         }
@@ -52,9 +50,10 @@ public class PairingActivity extends FragmentActivity implements SpheroRobotDisc
     public void handleRobotChangedState(SpheroRobotBluetoothNotification spheroRobotBluetoothNotification) {
         switch (spheroRobotBluetoothNotification) {
             case Online: {
-                spheroRobotProxy.stopDiscovering();
+                SpheroModel.stopDiscovering();
                 setConnectButtonText("Connect");
                 Intent intent = new Intent(this, DriveActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
             }
