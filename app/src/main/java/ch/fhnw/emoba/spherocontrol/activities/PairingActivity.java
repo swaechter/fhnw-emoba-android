@@ -18,7 +18,7 @@ import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 
 public class PairingActivity extends FragmentActivity implements SpheroRobotDiscoveryListener {
 
-    public static final boolean DEBUG = true;//Build.PRODUCT.startsWith("sdk");
+    public static final boolean DEBUG = Build.PRODUCT.startsWith("sdk");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class PairingActivity extends FragmentActivity implements SpheroRobotDisc
         } else if ((bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) && !DEBUG) {
             showErrorAlert("Alert", "The device has no bluetooth adapter or bluetooth isn't enabled. Please enable bluetooth!");
         } else {
-            if(!SpheroModel.isDiscovering()) {
+            if (!SpheroModel.isDiscovering()) {
                 SpheroModel.startDiscovering(getApplicationContext());
                 setConnectButtonText("Connecting...");
             } else {
