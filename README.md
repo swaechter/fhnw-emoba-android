@@ -6,25 +6,25 @@ This project provides our Android application for the Sphero SPRK+ made during t
 
 ## Screenshots
 
-### Pairing with Device
+### Connect to Device
 
-TODO
+![Connect to Device](img/Image_Connect.jpg)
 
 ### Calibrate Sensors
 
-TODO
+![Calibrate Sensors](img/Image_Aim.jpg)
 
 ### Touch Control
 
-TODO
+![Touch Control](img/Image_Touch.jpg)
 
 ### Sensor Control
 
-TODO
+![Sensor Control](img/Image_Sensor.jpg)
 
 ### Disconnect from Device
 
-TODO
+![Disconnect from Device](img/Image_Disconnect.jpg)
 
 ## Known Erratas
 
