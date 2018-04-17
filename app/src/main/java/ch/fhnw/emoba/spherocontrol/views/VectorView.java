@@ -80,7 +80,8 @@ public class VectorView extends View {
                 canvas.drawLine(centerPoint.x, centerPoint.y, touchPoint.x, touchPoint.y, linePaint);
                 canvas.drawCircle(touchPoint.x, touchPoint.y, canvasRadius * 0.1f, linePaint);
             } else {
-
+                canvas.drawLine(centerPoint.x, centerPoint.y, touchPoint.x, touchPoint.y, linePaint);
+                canvas.drawCircle(touchPoint.x, touchPoint.y, canvasRadius * 0.1f, linePaint);
             }
         }
         canvas.drawCircle(centerPoint.x, centerPoint.y, canvasRadius * 0.02f, linePaint);
@@ -132,5 +133,25 @@ public class VectorView extends View {
 
         invalidate();
         return true;
+    }
+
+    public Point calculateDisplayPoint(float angle, float velocity) {
+        if (velocity > 1.0) {
+            velocity = 1.0f;
+        }
+
+        float circleX = (float) Math.cos(Math.toRadians(angle)) * velocity;
+        float circleY = (float) Math.sin(Math.toRadians(angle)) * velocity;
+
+        float centerX = centerPoint.x;
+        float centerY = centerPoint.y;
+
+        float relativeX = canvasRadius * circleX;
+        float relativeY = canvasRadius * circleY;
+
+        float absoluteX = centerX - relativeX;
+        float absoluteY = centerY + relativeY;
+
+        return new Point((int) absoluteX, (int) absoluteY);
     }
 }

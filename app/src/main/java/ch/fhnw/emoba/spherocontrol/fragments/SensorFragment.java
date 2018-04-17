@@ -1,13 +1,16 @@
 package ch.fhnw.emoba.spherocontrol.fragments;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -60,7 +63,6 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
 
     @Override
     public void onMove(float angle, float velocity) {
-        // Do nothing
     }
 
     @Override
@@ -70,23 +72,24 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        double x = event.values[0];
-        double y = event.values[1];
+        double sensorX = event.values[0];
+        double sensorY = event.values[1];
 
-        float angle = SpheroMath.calculateSensorAngle(x, y);
-        float velocity = (float) Math.max(0, (angle - MIN_ANGLE) / 6d);
-        if (velocity > 1.0) {
+        float circleAngle = SpheroMath.calculateTouchAngle(sensorX, sensorY);
+        float spheroAngle = SpheroMath.calculateSensorAngle(sensorX, sensorY);
+        float sensorVelocity = (float) Math.max(0, (spheroAngle - MIN_ANGLE) / 6d);
+        double sensorSum = Math.abs(sensorX) + Math.abs(sensorY);
 
-            velocity = 1.0f;
+        if (sensorVelocity > 1.0) {
+            sensorVelocity = 1.0f;
         }
 
-        velocity *= THROTTLE_RATIO;
-
-        double sum = Math.abs(x) + Math.abs(y);
-
-        if (sum > MIN_ANGLE) {
-            SpheroModel.startDriving(DriveActivity.spheroWorkerThread, angle, velocity);
+        if (sensorSum > MIN_ANGLE) {
+            float spheroVelocity = (float) (sensorVelocity * THROTTLE_RATIO);
+            triggerTouchEvent(circleAngle, sensorVelocity);
+            SpheroModel.startDriving(DriveActivity.spheroWorkerThread, spheroAngle, spheroVelocity);
         } else {
+            triggerTouchEvent(circleAngle, 0.0f);
             SpheroModel.stopDriving(DriveActivity.spheroWorkerThread);
         }
     }
@@ -94,5 +97,20 @@ public class SensorFragment extends Fragment implements TabbedFragment, VectorVi
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Do nothing
+    }
+
+    private void triggerTouchEvent(float angle, float velocity) {
+        View view = getView();
+        if (view != null && view instanceof VectorView) {
+            VectorView vectorView = (VectorView) view;
+
+            Point displayPoint = vectorView.calculateDisplayPoint(angle, velocity);
+            long downTime = SystemClock.uptimeMillis();
+            long eventTime = downTime + 100;
+            int metaState = 0;
+
+            MotionEvent motionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, displayPoint.x, displayPoint.y, metaState);
+            view.dispatchTouchEvent(motionEvent);
+        }
     }
 }

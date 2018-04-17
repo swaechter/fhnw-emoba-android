@@ -18,7 +18,7 @@ import ch.fhnw.emoba.spherocontrol.models.SpheroModel;
 
 public class PairingActivity extends FragmentActivity implements SpheroRobotDiscoveryListener {
 
-    public static final boolean DEBUG = Build.PRODUCT.startsWith("sdk");
+    public static final boolean DEBUG = true;//Build.PRODUCT.startsWith("sdk");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
