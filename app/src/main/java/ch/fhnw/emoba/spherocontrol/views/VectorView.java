@@ -99,9 +99,10 @@ public class VectorView extends View {
             float relativeAngle = SpheroMath.calculateTouchAngle(relativeX, relativeY);
             float spheroAngle = SpheroMath.calculateSpheroAngle(relativeX, relativeY);
 
-            double relativeVelocity = Math.sqrt(Math.pow(relativeX, 2) + Math.pow(relativeY, 2));
-            float fixedX = (float) Math.cos(Math.toRadians(relativeAngle)) * canvasRadius;
-            float fixedY = (float) Math.sin(Math.toRadians(relativeAngle)) * canvasRadius;
+            double relativeVelocity = SpheroMath.calculateVelocity(relativeX, relativeY);
+            float fixedX = SpheroMath.calculateX(relativeAngle) * canvasRadius;
+            float fixedY = SpheroMath.calculateY(relativeAngle) * canvasRadius;
+
             if (relativeVelocity > canvasRadius) {
                 relativeX = fixedX;
                 relativeY = fixedY;
@@ -134,8 +135,8 @@ public class VectorView extends View {
             velocity = 1.0f;
         }
 
-        float circleX = (float) Math.cos(Math.toRadians(angle)) * velocity;
-        float circleY = (float) Math.sin(Math.toRadians(angle)) * velocity;
+        float circleX = SpheroMath.calculateX(angle) * velocity;
+        float circleY = SpheroMath.calculateY(angle) * velocity;
 
         float centerX = centerPoint.x;
         float centerY = centerPoint.y;
