@@ -9,7 +9,7 @@ import ch.fhnw.edu.emoba.spherolib.SpheroRobotProxy;
 
 public class SpheroModel {
 
-    private static final long DRIVE_BLOCKING_TIME = 500;
+    private static final long DRIVE_BLOCKING_TIME = 300;
 
     private static long drivingTimestamp = System.currentTimeMillis();
 
